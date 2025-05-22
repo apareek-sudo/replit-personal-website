@@ -32,8 +32,8 @@ export default function Footer() {
       <div className="container py-8 md:py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="space-y-4">
-            <Link href="/">
-              <a className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Portfolio</a>
+            <Link href="/" className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+              Portfolio
             </Link>
             <p className="text-muted-foreground">
               A showcase of my skills, projects, and experiences.
@@ -44,23 +44,23 @@ export default function Footer() {
             <h3 className="text-lg font-semibold">Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/">
-                  <a className="text-muted-foreground hover:text-primary transition-colors">Home</a>
+                <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
+                  Home
                 </Link>
               </li>
               <li>
-                <Link href="/about">
-                  <a className="text-muted-foreground hover:text-primary transition-colors">About</a>
+                <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
+                  About
                 </Link>
               </li>
               <li>
-                <Link href="/projects">
-                  <a className="text-muted-foreground hover:text-primary transition-colors">Projects</a>
+                <Link href="/projects" className="text-muted-foreground hover:text-primary transition-colors">
+                  Projects
                 </Link>
               </li>
               <li>
-                <Link href="/contact">
-                  <a className="text-muted-foreground hover:text-primary transition-colors">Contact</a>
+                <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
+                  Contact
                 </Link>
               </li>
             </ul>
