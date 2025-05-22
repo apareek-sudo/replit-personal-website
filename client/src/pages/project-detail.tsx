@@ -11,28 +11,46 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Project } from "@/types";
 import { getQueryFn } from "@/lib/queryClient";
+import { useGitHubPagesData } from "../hooks/useGitHubPagesData";
 
 export default function ProjectDetail() {
   const { id } = useParams();
   const [, setLocation] = useLocation();
+  
+  // Check if we're running on GitHub Pages
+  const { isGitHubPages, mockData } = useGitHubPagesData();
   
   // Redirect to projects page if id is not provided
   if (!id) {
     setLocation("/projects");
     return null;
   }
-
-  // Fetch project details
-  const { data: project, isLoading, error } = useQuery<Project>({
+  
+  // For GitHub Pages, get project directly from mock data
+  const projectId = parseInt(id);
+  const mockProject = isGitHubPages 
+    ? mockData.projects.find(p => p.id === projectId) 
+    : null;
+  
+  // Fetch project details from API when not on GitHub Pages
+  const { data: apiProject, isLoading: apiLoading, error: apiError } = useQuery<Project>({
     queryKey: [`/api/projects/${id}`],
     queryFn: getQueryFn({ on401: "returnNull" }),
+    enabled: !isGitHubPages, // Don't run the query on GitHub Pages
   });
-
-  // Fetch all projects for navigation
-  const { data: allProjects } = useQuery<Project[]>({
+  
+  // Fetch all projects for navigation from API when not on GitHub Pages
+  const { data: apiAllProjects, isLoading: apiAllProjectsLoading } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
     queryFn: getQueryFn({ on401: "returnNull" }),
+    enabled: !isGitHubPages, // Don't run the query on GitHub Pages
   });
+  
+  // Use mock data on GitHub Pages, API data otherwise
+  const project = isGitHubPages ? mockProject : apiProject;
+  const allProjects = isGitHubPages ? mockData.projects : apiAllProjects;
+  const isLoading = !isGitHubPages && (apiLoading || apiAllProjectsLoading);
+  const error = !isGitHubPages ? apiError : (mockProject ? null : new Error("Project not found"));
 
   // Handle not found or error
   if (error) {

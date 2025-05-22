@@ -8,15 +8,24 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Project } from "@/types";
 import { getQueryFn } from "@/lib/queryClient";
+import { useGitHubPagesData } from "../hooks/useGitHubPagesData";
 
 export default function Projects() {
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Fetch all projects
-  const { data: projects, isLoading } = useQuery<Project[]>({
+  // Check if we're running on GitHub Pages
+  const { isGitHubPages, mockData } = useGitHubPagesData();
+  
+  // Fetch all projects from API when not on GitHub Pages
+  const { data: apiProjects, isLoading: apiLoading } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
     queryFn: getQueryFn({ on401: "returnNull" }),
+    enabled: !isGitHubPages, // Don't run the query on GitHub Pages
   });
+  
+  // Use mock data on GitHub Pages, API data otherwise
+  const projects = isGitHubPages ? mockData.projects : apiProjects;
+  const isLoading = !isGitHubPages && apiLoading;
 
   // Filter projects based on search query
   const filteredProjects = projects?.filter((project) => {
