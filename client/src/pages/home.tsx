@@ -6,27 +6,42 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Profile, Project, Skill } from "@/types";
 import { getQueryFn } from "@/lib/queryClient";
+import { useGitHubPagesData } from "../hooks/useGitHubPagesData";
 
 export default function Home() {
+  // Check if we're running on GitHub Pages
+  const { isGitHubPages, mockData } = useGitHubPagesData();
+  
   // Fetch profile data
-  const { data: profile, isLoading: profileLoading } = useQuery<Profile>({
+  const { data: apiProfile, isLoading: profileLoading } = useQuery<Profile>({
     queryKey: ["/api/profile"],
     queryFn: getQueryFn({ on401: "returnNull" }),
+    enabled: !isGitHubPages, // Don't run the query on GitHub Pages
   });
 
   // Fetch featured projects
-  const { data: featuredProjects, isLoading: projectsLoading } = useQuery<Project[]>({
+  const { data: apiFeaturedProjects, isLoading: projectsLoading } = useQuery<Project[]>({
     queryKey: ["/api/projects", { featured: true }],
     queryFn: getQueryFn({ on401: "returnNull" }),
+    enabled: !isGitHubPages, // Don't run the query on GitHub Pages
   });
 
   // Fetch skills
-  const { data: skills, isLoading: skillsLoading } = useQuery<Skill[]>({
+  const { data: apiSkills, isLoading: skillsLoading } = useQuery<Skill[]>({
     queryKey: ["/api/skills"],
     queryFn: getQueryFn({ on401: "returnNull" }),
+    enabled: !isGitHubPages, // Don't run the query on GitHub Pages
   });
 
-  const isLoading = profileLoading || projectsLoading || skillsLoading;
+  // Use mock data on GitHub Pages, API data otherwise
+  const profile = isGitHubPages ? mockData.profile : apiProfile;
+  const featuredProjects = isGitHubPages 
+    ? mockData.projects.filter(p => p.featured === "true") 
+    : apiFeaturedProjects;
+  const skills = isGitHubPages ? mockData.skills : apiSkills;
+  
+  // Only show loading state when not on GitHub Pages and data is loading
+  const isLoading = !isGitHubPages && (profileLoading || projectsLoading || skillsLoading);
 
   return (
     <div className="container py-8 md:py-12 space-y-16">
