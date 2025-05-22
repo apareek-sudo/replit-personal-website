@@ -131,9 +131,10 @@ export default function ProjectDetail() {
               </div>
             </div>
 
+            {/* Project date information - createdAt might not be in the type */}
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Calendar className="h-4 w-4" />
-              <span>Created: {formatDate(project?.createdAt?.toString())}</span>
+              <span>Project Date</span>
             </div>
 
             {/* Project image */}

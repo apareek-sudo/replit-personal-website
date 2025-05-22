@@ -53,18 +53,18 @@ export default function Home() {
                 profile?.title || "Full-Stack Developer"
               )}
             </h2>
-            <p className="text-lg text-muted-foreground max-w-prose">
-              {isLoading ? (
-                <>
-                  <div className="h-6 w-full bg-muted animate-pulse rounded mb-2"></div>
-                  <div className="h-6 w-5/6 bg-muted animate-pulse rounded mb-2"></div>
-                  <div className="h-6 w-4/6 bg-muted animate-pulse rounded"></div>
-                </>
-              ) : (
-                profile?.bio ||
-                "Passionate developer with expertise in React, Node.js, and cloud technologies. I love building user-friendly web applications with clean, maintainable code."
-              )}
-            </p>
+            {isLoading ? (
+              <div className="space-y-2 max-w-prose">
+                <div className="h-6 w-full bg-muted animate-pulse rounded"></div>
+                <div className="h-6 w-5/6 bg-muted animate-pulse rounded"></div>
+                <div className="h-6 w-4/6 bg-muted animate-pulse rounded"></div>
+              </div>
+            ) : (
+              <p className="text-lg text-muted-foreground max-w-prose">
+                {profile?.bio ||
+                "Passionate developer with expertise in React, Node.js, and cloud technologies. I love building user-friendly web applications with clean, maintainable code."}
+              </p>
+            )}
             <div className="flex gap-4">
               <Button asChild>
                 <Link href="/projects">
